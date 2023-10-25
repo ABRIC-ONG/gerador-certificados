@@ -4,7 +4,7 @@ import { PDFDocument, rgb } from "pdf-lib";
 import arquivoFonteRoboto from "../assets/Roboto-Regular.ttf";
 import modeloCertificadoIncentivo from "../assets/Modelo Prêmio ABRIC de Incentivo à Ciência.pdf";
 import modeloCertificadoExcelencia from "../assets/Modelo Prêmio ABRIC de Excelência em Pesquisa.pdf";
-import { CertificationType, Projeto } from "../entities/Projeto";
+import { TipoDeCertificado, Projeto } from "../entities/Projeto";
 import quebrarTexto from "./QuebrarTexto";
 
 const TAMANHO_FONTE_TITULO = 32;
@@ -18,11 +18,11 @@ export const gerarCertificado = async (projeto: Projeto) => {
   let modelo: string = "";
 
   // lista de possíveis certificados a serem definidos
-  switch (+projeto.tipoCertificado) {
-    case CertificationType.Incentivo:
+  switch (projeto.tipoCertificado) {
+    case TipoDeCertificado.Incentivo:
       modelo = modeloCertificadoIncentivo;
       break;
-    case CertificationType.Excelencia:
+    case TipoDeCertificado.Excelencia:
       modelo = modeloCertificadoExcelencia;
       break;
   }
@@ -122,7 +122,7 @@ export const gerarCertificado = async (projeto: Projeto) => {
   });
 
   const pdfTitle = [
-    `Certificado Prêmio ${CertificationType[projeto.tipoCertificado]}`,
+    `Certificado Prêmio de ${projeto.tipoCertificado}`,
     nome,
   ].join(" - ");
   pdf.setTitle(pdfTitle);

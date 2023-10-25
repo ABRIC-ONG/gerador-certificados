@@ -9,55 +9,56 @@ import { TipoCertificado } from "./List/TipoCertificado";
 import { isPlural } from "../utils/IsPlural";
 import { Autores } from "./List/Autores";
 
-interface ListProps {
+interface ListaProjetosProps {
   projetos: Projeto[];
 }
 
-const initialPeopleIndex = 0;
+const indexProjetoInicial = 0;
 
-const ListaProjetos = (props: ListProps) => {
-  const { projetos: people } = props;
-  const [personIndex, setPersonIndex] = useState<number>(initialPeopleIndex);
-  const [selectedPerson, setSelectedPerson] = useState<Projeto>(
-    people[initialPeopleIndex]
+const ListaProjetos = (props: ListaProjetosProps) => {
+  const { projetos } = props;
+  const [indexProjeto, setIndexProjeto] = useState<number>(indexProjetoInicial);
+  const [projetoSelecionado, setProjetoSelecionada] = useState<Projeto>(
+    projetos[indexProjetoInicial]
   );
 
   useEffect(() => {
-    const newIndex = people.length - 1;
-    setPersonIndex(newIndex);
-    setSelectedPerson(people[newIndex]);
-  }, [people]);
+    const novoIndex = projetos.length - 1;
+    setIndexProjeto(novoIndex);
+    setProjetoSelecionada(projetos[novoIndex]);
+  }, [projetos]);
 
   useEffect(() => {
-    setSelectedPerson(people[personIndex]);
-  }, [personIndex]);
+    setProjetoSelecionada(projetos[indexProjeto]);
+  }, [indexProjeto]);
 
   return (
     <div className="flex flex-col items-center w-full max-w-xl lg:w-1/2 lg:max-w-3xl">
-      <h2 className="font-bold text-xl mb-4 lg:text-3xl">
-        {people.length} certificado{isPlural(people.length) && "s"} cadastrado
-        {isPlural(people.length) && "s"}
-      </h2>
       <div className="p-4 flex flex-col text-lg w-[90%] bg-gray-200">
-        {people?.length > 0 ? (
+        {projetos?.length > 0 ? (
           <>
-            <NomeProjeto nomeProjeto={selectedPerson?.nome} />
-            <Autores autores={selectedPerson?.autores || []} />
-            <DataEmissao dataEmissao={selectedPerson?.dataEmissao} />
+            <h2 className="font-bold text-xl mb-4 lg:text-3xl">
+              {projetos.length} certificado{isPlural(projetos.length) && "s"}{" "}
+              cadastrado
+              {isPlural(projetos.length) && "s"}
+            </h2>
+            <NomeProjeto nomeProjeto={projetoSelecionado?.nome} />
+            <Autores autores={projetoSelecionado?.autores || []} />
+            <DataEmissao dataEmissao={projetoSelecionado?.dataEmissao} />
             <TipoCertificado
-              tipoCertificado={selectedPerson?.tipoCertificado}
+              tipoDoCertificado={projetoSelecionado?.tipoCertificado}
             />
             <ListPage
-              projectIndex={personIndex}
-              setProjectIndex={setPersonIndex}
-              projectCount={people.length ?? 0}
+              projectIndex={indexProjeto}
+              setProjectIndex={setIndexProjeto}
+              projectCount={projetos.length ?? 0}
             />
-            <BotaoGerar projetoSelecionado={selectedPerson} />
-            <GenerateAllButton projetos={people} />
+            <BotaoGerar projetoSelecionado={projetoSelecionado} />
+            <GenerateAllButton projetos={projetos} />
           </>
         ) : (
           <>
-            <h1>Nenhuma pessoa cadastrada.</h1>
+            <h1>Nenhum certificado cadastrado.</h1>
           </>
         )}
       </div>

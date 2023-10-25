@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Projeto as Projeto, CertificationType } from "../entities/Projeto";
+import { Projeto as Projeto, TipoDeCertificado } from "../entities/Projeto";
 import { isPlural } from "../utils/IsPlural";
 
 interface FormularioProps {
@@ -10,7 +10,7 @@ interface FormularioProps {
 const projetoInicial: Projeto = {
   nome: "",
   dataEmissao: new Date(),
-  tipoCertificado: CertificationType.Incentivo,
+  tipoCertificado: TipoDeCertificado.Incentivo,
   autores: [],
 };
 const nomeAutorInicial = "";
@@ -64,7 +64,7 @@ const Formulario = (props: FormularioProps) => {
       </label>
       <input
         id="name"
-        className="appearance-none border bg-gray-100 p-2 focus:bg-white focus:outline-darkPrimary mb-4 md:text-xl"
+        className="appearance-none border bg-gray-100 p-2 focus:bg-white focus:outline-darkPrimary mb-4 md:text-xl resize-y"
         placeholder="Nome do Projeto"
         value={projeto.nome}
         onChange={(e) =>
@@ -101,7 +101,7 @@ const Formulario = (props: FormularioProps) => {
       </label>
       <div className="mb-4 flex">
         <input
-          className="flex-1 appearance-none border bg-gray-100 p-2 md:text-xl focus:bg-white focus:outline-darkPrimary"
+          className="flex-[5] appearance-none border bg-gray-100 p-2 md:text-xl focus:bg-white focus:outline-darkPrimary"
           placeholder="Nome do autor"
           value={nomeAutor}
           onChange={(e) => setNomeAutor(e.currentTarget.value)}
@@ -109,9 +109,9 @@ const Formulario = (props: FormularioProps) => {
         <button
           type="button"
           onClick={adicionarAutor}
-          className="p-4 text-white bg-primary font-bold py-2"
+          className="flex-[2] text-white bg-primary font-bold"
         >
-          +
+          Adicionar
         </button>
       </div>
 
@@ -130,13 +130,15 @@ const Formulario = (props: FormularioProps) => {
           setProjeto({
             ...projeto,
             tipoCertificado: e.currentTarget
-              .value as unknown as CertificationType,
+              .value as unknown as TipoDeCertificado,
           })
         }
       >
-        <option value={CertificationType.Incentivo}>Incentivo à Ciência</option>
-        <option value={CertificationType.Excelencia}>
-          Excelência em Pesquisa
+        <option value={TipoDeCertificado.Incentivo}>
+          {TipoDeCertificado.Incentivo}
+        </option>
+        <option value={TipoDeCertificado.Excelencia}>
+          {TipoDeCertificado.Excelencia}
         </option>
       </select>
 
@@ -164,10 +166,14 @@ const Formulario = (props: FormularioProps) => {
       <button
         type="button"
         onClick={adicionarProjeto}
-        disabled={!projeto?.nome || !projeto?.dataEmissao}
+        disabled={
+          !projeto?.nome ||
+          !projeto?.dataEmissao ||
+          projeto?.autores?.length < 1
+        }
         className="px-16 text-white bg-primary font-bold py-2  md:text-xl disabled:opacity-75 md:py-4"
       >
-        Adicionar pessoa
+        Adicionar certificado
       </button>
     </form>
   );
