@@ -72,23 +72,17 @@ export const gerarCertificado = async (projeto: Projeto) => {
   });
 
   const tituloProjeto = projeto.nome;
-  let tamanhoFonteTitulo = TAMANHO_FONTE_TITULO + 1;
-  let linhas: string[];
-  let alturaLinhaTitulo: number;
 
-  do {
-    tamanhoFonteTitulo -= 1;
-    alturaLinhaTitulo = fonte.heightAtSize(tamanhoFonteTitulo);
-    linhas = quebrarTexto(
-      tituloProjeto,
-      fonte,
-      tamanhoFonteTitulo,
-      LARGURA_MAXIMA_TEXTO,
-      ALTURA_MAXIMA_TITULO
-    );
-  } while (linhas.length * alturaLinhaTitulo > ALTURA_MAXIMA_TITULO);
+  const [linhas, tamanhoFonteTitulo] = quebrarTexto(
+    tituloProjeto,
+    fonte,
+    TAMANHO_FONTE_TITULO,
+    LARGURA_MAXIMA_TEXTO,
+    ALTURA_MAXIMA_TITULO
+  );
 
-  const alturaTextoQuebradoEmLinhas = linhas.length * alturaLinhaTitulo;
+  const alturaTextoQuebradoEmLinhas =
+    linhas.length * fonte.heightAtSize(tamanhoFonteTitulo);
   linhas.forEach((linha, index) => {
     const larguraLinhaTitulo = fonte.widthOfTextAtSize(
       linha,
@@ -99,7 +93,7 @@ export const gerarCertificado = async (projeto: Projeto) => {
       y:
         185 -
         (ALTURA_MAXIMA_TITULO - alturaTextoQuebradoEmLinhas) / 2 -
-        index * alturaLinhaTitulo,
+        index * fonte.heightAtSize(tamanhoFonteTitulo),
       size: tamanhoFonteTitulo,
       font: fonte,
       x: larguraPdf / 2 - larguraLinhaTitulo / 2,

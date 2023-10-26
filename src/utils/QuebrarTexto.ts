@@ -6,33 +6,36 @@ export default function quebrarTexto(
   tamanhoFonte: number,
   larguraMaxima: number,
   alturaMaxima: number
-): string[] {
-  const palavras = texto.split(" ");
-  let linha = "";
-  let resultado = "";
-  for (let n = 0; n < palavras.length; n++) {
-    const linhaTeste = linha + palavras[n] + " ";
-    const larguraTeste = fonte.widthOfTextAtSize(linhaTeste, tamanhoFonte);
-    if (larguraTeste > larguraMaxima) {
-      resultado += linha + "\n";
-      linha = palavras[n] + " ";
-    } else {
-      linha = linhaTeste;
+): [string[], number] {
+  do {
+    const palavras = texto.split(" ");
+    let linha = "";
+    let resultado = "";
+    for (let n = 0; n < palavras.length; n++) {
+      const linhaTeste = linha + palavras[n] + " ";
+      const larguraTeste = fonte.widthOfTextAtSize(linhaTeste, tamanhoFonte);
+      if (larguraTeste > larguraMaxima) {
+        resultado += linha + "\n";
+        linha = palavras[n] + " ";
+      } else {
+        linha = linhaTeste;
+      }
     }
-  }
-  resultado += linha;
+    resultado += linha;
 
-  const paragrafos = resultado.split("\n");
+    const linhas = resultado.split("\n");
 
-  fonte.heightAtSize(tamanhoFonte);
+    const alturaTextoQuebradoEmLinhas =
+      linhas.length * fonte.heightAtSize(tamanhoFonte);
 
-  if (paragrafos.length * fonte.heightAtSize(tamanhoFonte) > alturaMaxima)
-    return quebrarTexto(
-      texto,
-      fonte,
-      tamanhoFonte - 1,
-      larguraMaxima,
-      alturaMaxima
-    );
-  else return paragrafos;
+    if (alturaTextoQuebradoEmLinhas > alturaMaxima)
+      return quebrarTexto(
+        texto,
+        fonte,
+        --tamanhoFonte,
+        larguraMaxima,
+        alturaMaxima
+      );
+    else return [linhas, tamanhoFonte];
+  } while (tamanhoFonte > 0);
 }
