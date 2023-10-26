@@ -52,14 +52,14 @@ export const gerarCertificado = async (projeto: Projeto) => {
   const pdfPage = pdf.getPages()?.[0];
   const { width: larguraPdf } = pdfPage.getSize();
 
-  let tamanhoFonteAutores = TAMANHO_FONTE_AUTORES + 1;
-  let larguraAutores: number;
+  let tamanhoFonteAutores = TAMANHO_FONTE_AUTORES;
+  let larguraAutores = fonte.widthOfTextAtSize(autores, tamanhoFonteAutores);
 
   // TODO: duas linhas para nomes dos autores
-  do {
+  while (larguraAutores > LARGURA_MAXIMA_TEXTO) {
     tamanhoFonteAutores -= 1;
     larguraAutores = fonte.widthOfTextAtSize(autores, tamanhoFonteAutores);
-  } while (larguraAutores > LARGURA_MAXIMA_TEXTO);
+  }
 
   const alturaLinhaAutores = fonte.heightAtSize(tamanhoFonteAutores);
 
@@ -91,7 +91,7 @@ export const gerarCertificado = async (projeto: Projeto) => {
 
     pdfPage.drawText(linha, {
       y:
-        185 -
+        200 -
         (ALTURA_MAXIMA_TITULO - alturaTextoQuebradoEmLinhas) / 2 -
         index * fonte.heightAtSize(tamanhoFonteTitulo),
       size: tamanhoFonteTitulo,
