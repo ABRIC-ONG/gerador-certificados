@@ -24,7 +24,7 @@ jobs:
       - name: Build do projeto
         run: npm run build
 
-      - name: Deploy no GitHub Pages do build
-        run: npx gh-pages -d dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
+        with:
+          folder: dist # Specify the build folder (where your site files are located)
