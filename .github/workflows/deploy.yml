@@ -29,7 +29,13 @@ jobs:
       - name: Build do projeto
         run: npm run build
 
-      - name: Deploy no GitHub Pages
+      - name: Upload de artefatos para o deploy
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-artifacts # Name the artifact
+          path: dist # Folder where your static files are generated
+
+      - name: Deploy ao GitHub Pages
         uses: actions/deploy-pages@v1
         with:
-          folder: dist # Specify the build folder (where your site files are located)
+          artifact_name: dist-artifacts # Name of the uploaded artifact
