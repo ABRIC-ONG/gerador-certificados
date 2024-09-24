@@ -7,16 +7,15 @@ on:
 
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -29,13 +28,15 @@ jobs:
       - name: Build do projeto
         run: npm run build
 
-      - name: Upload de artefatos para o deploy
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist-artifacts # Name the artifact
-          path: dist # Folder where your static files are generated
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
 
-      - name: Deploy ao GitHub Pages
-        uses: actions/deploy-pages@v1
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          artifact_name: dist-artifacts # Name of the uploaded artifact
+          # upload entire directory
+          path: "./dist"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
