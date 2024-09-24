@@ -91,7 +91,7 @@ export const gerarCertificado = async (projeto: Projeto) => {
 
     pdfPage.drawText(linha, {
       y:
-        200 -
+        187.5 -
         (ALTURA_MAXIMA_TITULO - alturaTextoQuebradoEmLinhas) / 2 -
         index * fonte.heightAtSize(tamanhoFonteTitulo),
       size: tamanhoFonteTitulo,
